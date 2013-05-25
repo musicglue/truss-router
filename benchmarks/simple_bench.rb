@@ -20,7 +20,7 @@ end
 
 puts "Benchmarking in progress with 50k iterations, please wait\n\n"
 
-Benchmark.bm(12) do |x|
+Benchmark.bmbm(12) do |x|
     x.report("Plain app")    { TIMES.times{ app.call(REQUEST) } }
     x.report("Single route") { TIMES.times { Truss::Router.call(REQUEST) } }
 end
@@ -44,9 +44,9 @@ end
 
 HOME_REQUEST = Rack::MockRequest.env_for("/home", method: "GET")
 
-Benchmark.bm(12) do |x|
+Benchmark.bmbm(10) do |x|
     x.report("Plain app")    { TIMES.times{ app.call(REQUEST) } }
-    x.report("Single route") { TIMES.times { Truss::Router.call(HOME_REQUEST) } }
+    x.report("Last route") { TIMES.times { Truss::Router.call(HOME_REQUEST) } }
 end
 
 
@@ -67,7 +67,7 @@ Truss::Router.draw do |route|
     route.get("/home", app2)
 end
 
-Benchmark.bm(10) do |x|
+Benchmark.bmbm(10) do |x|
     x.report("Plain app")  { TIMES.times{ app.call(REQUEST) } }
     x.report("Last route") { TIMES.times { Truss::Router.call(HOME_REQUEST) } }
 end

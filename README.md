@@ -63,7 +63,10 @@ request methods to different endpoints on the same path.
 
 Having said that, there isn't much point in having candy if it makes it slow. HTTP Router inspired me to include benchmarks within
 the repo that make it easy to check how performant the solution is. I'll include the current benchmark output in the wiki for each
-supported platform (1.9.3/2.0.0/JRuby1.7/RBX) and update with each release to keep things current.
+supported platform ([1.9.3](https://github.com/truss-io/router/wiki/Benchmarks-MRI-1.9.3) / [2.0.0](https://github.com/truss-io/router/wiki/Benchmarks-MRI-2.0.0) / [JRuby1.7](https://github.com/truss-io/router/wiki/Benchmarks-JRuby) / [RBX](https://github.com/truss-io/router/wiki/Benchmarks-RBX)) and update with each release to keep things current.
+
+Currently, 2.0.0 is by far the slowest, which is somewhat curious - I had expected it to lose to JRuby and possibly RBX but not to
+MRI 1.9.3, which is worth investigating.
 
 ## Contributing
 
