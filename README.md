@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/truss-io/router.png)](https://travis-ci.org/truss-io/router)
 # Truss::Router
 
 TODO: Write a gem description
