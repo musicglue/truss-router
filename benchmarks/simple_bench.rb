@@ -1,8 +1,8 @@
-puts "Welcome to Truss Router Benchmark suite. Please wait...\n\n"
 require 'benchmark'
 require 'rack'
 require File.expand_path("../../lib/truss-router", __FILE__)
 
+puts "Welcome to Truss Router v#{Truss::Router::VERSION} Benchmark suite. Please wait...\n\n"
 app = ->(env) {
     [
         200,
@@ -25,7 +25,7 @@ Benchmark.bm(12) do |x|
     x.report("Single route") { TIMES.times { Truss::Router.call(REQUEST) } }
 end
 
-puts "\n\nBenchmarking for 2nd preference route\n\n"
+puts "\n\nBenchmarking for 2nd preference route with 50k iterations\n\n"
 
 Truss::Router.reset!
 
@@ -50,7 +50,7 @@ Benchmark.bm(12) do |x|
 end
 
 
-puts "\n\nBenchmarking 10 route mesh with 50k iterations, please wait\n\n"
+puts "\n\nBenchmarking 10 route map with 50k iterations, hitting last route\n\n"
 
 Truss::Router.reset!
 
