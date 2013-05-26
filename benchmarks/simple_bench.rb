@@ -72,3 +72,18 @@ Benchmark.bmbm(10) do |x|
     x.report("Last route") { TIMES.times { Truss::Router.call(HOME_REQUEST) } }
 end
 
+puts "\n\nBenchmarking 1 dynamic segment with 50k requests\n\n"
+Truss::Router.reset!
+
+Truss::Router.draw do |route|
+    route.get("/posts/:id", app)
+end
+
+POSTS_REQUEST = Rack::MockRequest.env_for("/posts/9", method: "GET")
+
+Benchmark.bmbm(11) do |x|
+    x.report("Plain app")   { TIMES.times{ app.call(REQUEST) } }
+    x.report("One Dynamic") { TIMES.times { Truss::Router.call(POSTS_REQUEST) } }
+end
+
+

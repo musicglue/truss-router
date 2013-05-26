@@ -34,7 +34,7 @@ it doesn't actually support much, but features will come!
 
 So, how do I use it? Basically, just require the gem, and then ```draw``` a map of your routes. Routes are evaluated from top to bottom, so routes at the top of the route block will match and return before routes below them. The route builder takes the following arguments:
 
-1. path, e.g. "/home" (currently only exact matches match, dynamic segments coming soon!)
+1. path, e.g. "/home" or "/posts/:id"
 2. rack app, e.g. ```->(env){[200, {'Content-Type' => 'text/plain'}, ["Hi, I'm a Rack App"]]}```
 3. an optional hash of options (currently not used!)
 
@@ -46,8 +46,16 @@ Truss::Router.draw do |r|
     r.post("/login", LoginApp)
     r.patch("/update", DhhApp)
     r.delete("/goodbye", RemoveThisApp)
+    r.get("/posts/:id", PostApp) # :id is a dynamic segment
 end
 ```
+Any valid Rack endpoint is supported as an endpoint in this map, but please be aware that Truss Router will pass a 
+Truss::Router::Request object (a thin layer over Rack::Request) into the rack app rather than just the env hash. This 
+allows for passing segment options and similar without too much drama.
+
+Any dynamic segments (declared by prefixing that segment with ```:```) will be passed into the application as part of the Truss
+Request object, available under ```#routing_params``` for now, which is a simple hash of the segment name to the value. All keys 
+are strings and no attempt is made to coerce values, so they are all strings as well.
 
 Finally, you can then run the Truss Router as a rack app:
 
