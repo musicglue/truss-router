@@ -51,12 +51,12 @@ describe Truss::Router::Node do
     describe "dynamic segments" do
         context "single dynamic matcher" do
             subject { Truss::Router::Node.new(:delete, "/:id", app) }
-            its(:matchable_regex) { should eq(/\A(DELETE|OPTIONS)\/(?<id>[\w\-]+)\Z/) }
+            it { subject.matchable_regex.to_s.should eq(/\A(DELETE|OPTIONS)\/(?<id>[\w\-]+)\Z/.to_s) }
         end
         
         context "multiple dynamic matchers" do
             subject { Truss::Router::Node.new(:delete, "/posts/:post_id/comments/:id", app) }
-            its(:matchable_regex) { should eq(/\A(DELETE|OPTIONS)\/posts\/(?<post_id>[\w\-]+)\/comments\/(?<id>[\w\-]+)\Z/) }
+            it { subject.matchable_regex.to_s.should eq(/\A(DELETE|OPTIONS)\/posts\/(?<post_id>[\w\-]+)\/comments\/(?<id>[\w\-]+)\Z/.to_s) }
         end
    end
 end
