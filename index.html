@@ -1,0 +1,141 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Router by truss-io</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Router</h1>
+        <p>Rack Router for Truss</p>
+
+        <p class="view"><a href="https://github.com/truss-io/router">View the Project on GitHub <small>truss-io/router</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/truss-io/router/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/truss-io/router/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/truss-io/router">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>Truss Router</h1>
+
+<p><a href="https://travis-ci.org/truss-io/router"><img src="https://travis-ci.org/truss-io/router.png" alt="Build Status"></a></p>
+
+<p>Truss Router is the first released part of Truss - a new wrapper around Rack to make writing performant Ruby web endpoints easier.
+Truss Router is currently considered alpha software, and as such please don't use in any production environment, but feel free to
+explore and see how it handles for you.</p>
+
+<p>Truss supports the following Ruby platforms in Pure Ruby:</p>
+
+<ul>
+<li>MRI 1.9.3</li>
+<li>MRI 2.0.0</li>
+<li>JRuby 1.7</li>
+<li>RBX 1.9 mode</li>
+</ul><h2>Installation</h2>
+
+<p>Add this line to your application's Gemfile:</p>
+
+<pre><code>gem 'truss-router'
+</code></pre>
+
+<p>And then execute:</p>
+
+<pre><code>$ bundle
+</code></pre>
+
+<p>Or install it yourself as:</p>
+
+<pre><code>$ gem install truss-router
+</code></pre>
+
+<h2>Usage</h2>
+
+<p>Truss Router admires Journey, although doesn't fancy doing all the hard work that it does. With that in mind, it offers a nice DSL
+and some pleasant features, but doesn't currently support things like namespaces or constraints. To be honest, at this 0.0.2 release
+it doesn't actually support much, but features will come!</p>
+
+<p>So, how do I use it? Basically, just require the gem, and then <code>draw</code> a map of your routes. Routes are evaluated from top to bottom, so routes at the top of the route block will match and return before routes below them. The route builder takes the following arguments:</p>
+
+<ol>
+<li>path, e.g. "/home" or "/posts/:id"</li>
+<li>rack app, e.g. <code>-&gt;(env){[200, {'Content-Type' =&gt; 'text/plain'}, ["Hi, I'm a Rack App"]]}</code>
+</li>
+<li>an optional hash of options (currently not used!)</li>
+</ol><div class="highlight"><pre><span class="nb">require</span> <span class="s1">'truss-router'</span>
+
+<span class="ss">Truss</span><span class="p">:</span><span class="ss">:Router</span><span class="o">.</span><span class="n">draw</span> <span class="k">do</span> <span class="o">|</span><span class="n">r</span><span class="o">|</span>
+    <span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"/"</span><span class="p">,</span> <span class="no">HomeApp</span><span class="p">)</span>
+    <span class="n">r</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">"/login"</span><span class="p">,</span> <span class="no">LoginApp</span><span class="p">)</span>
+    <span class="n">r</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">"/update"</span><span class="p">,</span> <span class="no">DhhApp</span><span class="p">)</span>
+    <span class="n">r</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="s2">"/goodbye"</span><span class="p">,</span> <span class="no">RemoveThisApp</span><span class="p">)</span>
+    <span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"/posts/:id"</span><span class="p">,</span> <span class="no">PostApp</span><span class="p">)</span> <span class="c1"># :id is a dynamic segment</span>
+<span class="k">end</span>
+</pre></div>
+
+<p>Any valid Rack endpoint is supported as an endpoint in this map, but please be aware that Truss Router will pass a 
+Truss::Router::Request object (a thin layer over Rack::Request) into the rack app rather than just the env hash. This 
+allows for passing segment options and similar without too much drama.</p>
+
+<p>Any dynamic segments (declared by prefixing that segment with <code>:</code>) will be passed into the application as part of the Truss
+Request object, available under <code>#routing_params</code> for now, which is a simple hash of the segment name to the value. All keys 
+are strings and no attempt is made to coerce values, so they are all strings as well.</p>
+
+<p>Finally, you can then run the Truss Router as a rack app:</p>
+
+<div class="highlight"><pre><span class="n">run</span> <span class="ss">Truss</span><span class="p">:</span><span class="ss">:Router</span>
+</pre></div>
+
+<h2>Benchmarks</h2>
+
+<p>Truss Router aims to be a highly performant routing solution for your Rack apps, whilst giving you a nicer DSL than some of the
+inbuilt rack types (Cascade/URLMap), and a little bit of Rails Magic, such as param matching and simple binding of different
+request methods to different endpoints on the same path.</p>
+
+<p>Having said that, there isn't much point in having candy if it makes it slow. HTTP Router inspired me to include benchmarks within
+the repo that make it easy to check how performant the solution is. I'll include the current benchmark output in the wiki for each
+supported platform (<a href="https://github.com/truss-io/router/wiki/Benchmarks-MRI-1.9.3">1.9.3</a> / <a href="https://github.com/truss-io/router/wiki/Benchmarks-MRI-2.0.0">2.0.0</a> / <a href="https://github.com/truss-io/router/wiki/Benchmarks-JRuby">JRuby1.7</a> / <a href="https://github.com/truss-io/router/wiki/Benchmarks-RBX">RBX</a>) and update with each release to keep things current.</p>
+
+<p>Currently, 2.0.0 is by far the slowest, which is somewhat curious - I had expected it to lose to JRuby and possibly RBX but not to
+MRI 1.9.3, which is worth investigating.</p>
+
+<h2>Contributing</h2>
+
+<ol>
+<li>Fork it</li>
+<li>Create your feature branch (<code>git checkout -b my-new-feature</code>)</li>
+<li>Commit your changes (<code>git commit -am 'Add some feature'</code>)</li>
+<li>Push to the branch (<code>git push origin my-new-feature</code>)</li>
+<li>Create new Pull Request</li>
+</ol>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/truss-io">truss-io</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+              <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-41219892-1");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+  </body>
+</html>
