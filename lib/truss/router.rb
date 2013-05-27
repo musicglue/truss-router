@@ -1,3 +1,4 @@
+require "rack"
 require "truss/router/version"
 require "truss/router/node"
 require "truss/router/routes"
