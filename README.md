@@ -1,5 +1,6 @@
 # Truss Router
 [![Build Status](https://travis-ci.org/truss-io/router.png)](https://travis-ci.org/truss-io/router)
+[![Code Climate](https://codeclimate.com/github/truss-io/router.png)](https://codeclimate.com/github/truss-io/router.png)
 
 Truss Router is the first released part of Truss - a new wrapper around Rack to make writing performant Ruby web endpoints easier.
 Truss Router is currently considered alpha software, and as such please don't use in any production environment, but feel free to
