@@ -8,4 +8,5 @@ describe Truss::Router::Request do
     it { should respond_to(:routing_path) }
     it { should respond_to(:routing_params) }
     its(:routing_params) { should eq({}) }
+    its(:segment_length) { should eq(1) }
 end

@@ -42,13 +42,16 @@ describe Truss::Router do
                 subject.draw(&map)
             end
             it "should have two route" do
-                subject.routeset.length.should eq(2)
+                subject.routeset.total_nodes.should eq(3)
             end
-            it "should have a Get route as the first member of the routeset" do
-                subject.routeset[0].should be_kind_of(Truss::Router::Routes::Get)
+            it "should have a Get routeset with one member" do
+                subject.routeset.nodes_for("GET").length.should eq(1)
             end
-            it "should have a Post route as the second member of the routeset" do
-                subject.routeset[1].should be_kind_of(Truss::Router::Routes::Post)
+            it "should have an Head routeset with one member" do
+                subject.routeset.nodes_for("HEAD").length.should eq(1)
+            end
+            it "should have a Post routeset with one member" do
+                subject.routeset.nodes_for("POST").length.should eq(1)
             end
         end
     end

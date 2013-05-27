@@ -2,11 +2,15 @@ module Truss
     module Router
         class Node
             attr_accessor :request_method, :path, :has_dynamic_segments, 
-                          :endpoint, :matchable_regex, :options
+                          :endpoint, :matchable_regex, :options, :allowed_methods,
+                          :path_segments
+            
             def initialize(method, path, endpoint, options={})
                 @request_method, @path, @endpoint = method, path, endpoint
-                @has_dynamic_segments = false 
+                @has_dynamic_segments = false
                 @matchable_regex = build_matchable_regex(method, path, options)
+                @allowed_methods = discover_allowed_methods(method, path, options)
+                @path_segments   = get_path_segments(path)
                 @options = options
             end
 
@@ -30,23 +34,23 @@ module Truss
             def build_matchable_regex(method, path, options)
                 if path.include?(":")
                     self.has_dynamic_segments = true
-                    /\A#{method_group(method)}#{segment_string(path)}\Z/
+                    /\A#{segment_string(path)}\Z/
                 else
-                    %r[\A#{method_group(method)}#{path}\Z]
+                    %r[\A#{path}\Z]
                 end
             end
 
-            def method_group(method)
-                origin = case method
-                when :get
-                    "(GET|HEAD|OPTIONS)"
-                when :options
-                    "OPTIONS"
-                else
-                    "(#{method.to_s.upcase}|OPTIONS)"
-                end
+            def discover_allowed_methods(method, path, options)
+                allowed = [method.to_s.upcase]
+                allowed << "OPTIONS" if options.has_key?(:cors)
+                allowed << "HEAD" if (method == :get)
+                allowed
             end
 
+            def get_path_segments(path)
+                path.split("/").reject(&:empty?).count
+            end
+                    
             def segment_string(path)
                 components = path.split("/").map do |comp|
                     if comp[0] == ":"

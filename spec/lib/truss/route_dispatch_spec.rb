@@ -17,7 +17,7 @@ describe Truss::Router do
         end
 
         it "should return the first route for a matching path" do
-            subject[0].should_receive(:call).exactly(1).times.with(kind_of(Truss::Router::Request))
+            subject.nodes_for("GET")[0].should_receive(:call).exactly(1).times.with(kind_of(Truss::Router::Request))
             described_class.call(env)
         end
 
@@ -30,9 +30,9 @@ describe Truss::Router do
     context "multiple routes present" do
         let(:multiple_map) { ->(r){
                 r.get("/", app)
-                r.get("/home", app)
+                r.get("/home", app, cors: true)
                 r.get("/about", app)
-                r.post("/login", app)
+                r.post("/login", app, cors: true)
                 r.post("/home", app)
             }
         }
@@ -43,49 +43,49 @@ describe Truss::Router do
         end
 
         it "should call the second node given a get request for /home" do
-            subject[1].should_receive(:call).exactly(1).times.with(kind_of(Truss::Router::Request))
-            described_class.call(env)
+            subject.nodes_for("GET")[1].should_receive(:call).exactly(1).times.with(kind_of(Truss::Router::Request))
+            puts described_class.call(env)
         end
 
         it "should call the third node given a get request for /about" do
             about_env = Rack::MockRequest.env_for("/about", method: "GET")
-            subject[2].should_receive(:call).exactly(1).times.with(kind_of(Truss::Router::Request))
+            subject.nodes_for("GET")[2].should_receive(:call).exactly(1).times.with(kind_of(Truss::Router::Request))
             described_class.call(about_env)
         end
 
         it "should call the fourth node given a post request for /login" do
             login_env = Rack::MockRequest.env_for("/login", method: "POST")
-            subject[3].should_receive(:call).exactly(1).times.with(kind_of(Truss::Router::Request))
+            subject.nodes_for("POST")[0].should_receive(:call).exactly(1).times.with(kind_of(Truss::Router::Request))
             described_class.call(login_env)
         end
 
         it "should call the fifth node given a post request for /home" do
             post_home_env = Rack::MockRequest.env_for("/home", method: "POST")
-            subject[4].should_receive(:call).exactly(1).times.with(kind_of(Truss::Router::Request))
+            subject.nodes_for("POST")[1].should_receive(:call).exactly(1).times.with(kind_of(Truss::Router::Request))
             described_class.call(post_home_env)
         end
 
         it "should call the second node given an options request for /home" do
             options_home_env = Rack::MockRequest.env_for("/home", method: "OPTIONS")
-            subject[1].should_receive(:call).exactly(1).times.with(kind_of(Truss::Router::Request))
+            subject.nodes_for("OPTIONS")[0].should_receive(:call).exactly(1).times.with(kind_of(Truss::Router::Request))
             described_class.call(options_home_env)
         end
 
         it "should call the second node given a head request for /home" do
             head_home_env = Rack::MockRequest.env_for("/home", method: "HEAD")
-            subject[1].should_receive(:call).exactly(1).times.with(kind_of(Truss::Router::Request))
+            subject.nodes_for("HEAD")[1].should_receive(:call).exactly(1).times.with(kind_of(Truss::Router::Request))
             described_class.call(head_home_env)
         end
 
         it "should call the fourth node given an options request for /login" do
             options_login_env = Rack::MockRequest.env_for("/login", method: "OPTIONS")
-            subject[3].should_receive(:call).exactly(1).times.with(kind_of(Truss::Router::Request))
+            subject.nodes_for("OPTIONS")[1].should_receive(:call).exactly(1).times.with(kind_of(Truss::Router::Request))
             described_class.call(options_login_env)
         end
 
         it "should call the first node given a get request for /" do
             home_env = Rack::MockRequest.env_for("/", method: "GET")
-            subject[0].should_receive(:call).exactly(1).times.with(kind_of(Truss::Router::Request))
+            subject.nodes_for("GET")[0].should_receive(:call).exactly(1).times.with(kind_of(Truss::Router::Request))
             described_class.call(home_env)
         end
 

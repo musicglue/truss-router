@@ -60,7 +60,7 @@ module Truss
 
         protected
         def build_node method, path, endpoint, opts
-            routeset << Routes.const_get(method).new(path, endpoint, opts)
+            routeset.add_node Routes.const_get(method).new(path, endpoint, opts)
         end
     end
 end

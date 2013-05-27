@@ -8,10 +8,10 @@ explore and see how it handles for you.
 
 Truss supports the following Ruby platforms in Pure Ruby:
 
-* MRI 1.9.3
-* MRI 2.0.0
-* JRuby 1.7
-* RBX 1.9 mode
+* MRI 1.9.3 - [benchmarks](https://github.com/truss-io/router/wiki/Benchmarks-MRI-1.9.3)
+* MRI 2.0.0 - [benchmarks](https://github.com/truss-io/router/wiki/Benchmarks-MRI-2.0.0)
+* JRuby 1.7 - [benchmarks](https://github.com/truss-io/router/wiki/Benchmarks-JRuby)
+* RBX 1.9 mode - [benchmarks](https://github.com/truss-io/router/wiki/Benchmarks-RBX)
 
 ## Installation
 
@@ -84,3 +84,11 @@ MRI 1.9.3, which is worth investigating.
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create new Pull Request
+
+## Thanks and Inspiration
+
+Thanks first and foremost have to go to [Music Glue](http://musicglue.com) where I work for letting me play with amazing projects
+and do what I love for a living. 
+
+The inspiration for this project came from using [joshbuddy](https://github.com/joshboddy)'s [http_router](https://github.com/joshbuddy/http_router)
+project.

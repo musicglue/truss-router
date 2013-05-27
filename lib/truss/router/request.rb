@@ -8,8 +8,10 @@ module Truss
                 super(*args)
             end
 
-            def routing_path
-                "#{request_method}#{path}"
+            def routing_path; path end
+
+            def segment_length
+                @seglength ||= path.split("/").reject(&:empty?).count
             end
         end
     end
