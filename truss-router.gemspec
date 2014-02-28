@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["john@musicglue.com"]
   spec.description   = %q{Truss Router is a modular Rack Router for Truss}
   spec.summary       = %q{Truss Router is a modular Rack Router for Truss}
-  spec.homepage      = "http://truss-io.github.io/router"
+  spec.homepage      = "https://github.com/musicglue/truss-router"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files`.split($/)
